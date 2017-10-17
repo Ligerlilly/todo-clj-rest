@@ -1,6 +1,6 @@
-# todo-rest
+# todo-clj-rest
 
-FIXME
+App is really just two files at the moment project.clj and src/todo_rest/handler.clj
 
 ## Prerequisites
 
