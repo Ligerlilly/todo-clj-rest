@@ -1,5 +1,6 @@
 (ns todo-rest.handler
   (:use ring.util.response)
+  (:use cheshire.core)
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
@@ -19,13 +20,17 @@
         :user "jasonlane"
         :password ""}))
 
-(defn all []
+(defn getTodos []
   (response
   (into [] (sql/query db ["select * from todos order by id desc"]))))
 
+(defn createTodo [todo]
+    (sql/insert! db :todos [:name] [(get todo "todo")])
+    (getTodos))
 
 (defroutes app-routes
-  (GET "/" [] (all))
+  (GET "/" [] (getTodos))
+  (POST "/" {body :body} (createTodo body))
   (route/not-found "Not Found"))
 
 (def app
