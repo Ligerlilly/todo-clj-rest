@@ -3,18 +3,23 @@
     (:require
         [clojure.java.jdbc :as sql]))
 
-(let [db-host "localhost"
-    db-port 5432
-    db-name "todos_clj"]
-
-    (def db {:classname "org.postgresql.Driver" ; must be in classpath
-            :subprotocol "postgresql"
-            :subname (str "//" db-host ":" db-port "/" db-name)
-            ; Any additional keys are passed to the driver
-            ; as driver-specific properties.
-            :user "jasonlane"
-            :password ""}))
+(def db (or (System/getenv "DATABASE_URL")
+""))
 
 (defn getTodos []
     (response
     (into [] (sql/query db ["select * from todos order by id desc"]))))
+
+(defn createTodo [todo]
+    (sql/insert! db :todos [:name] [(get todo "todo")])
+    (getTodos))
+
+(defn updateTodo [todo]
+    (sql/update! db :todos {:name (get todo "name")} ["id = ?" (get todo "id")])
+    (getTodos))
+
+(defn deleteTodo [id]
+    (println id)
+    (sql/delete! db :todos ["id = ?" id])
+        (getTodos))
+

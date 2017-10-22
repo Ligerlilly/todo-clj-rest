@@ -4,37 +4,37 @@
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [clojure.java.jdbc :as sql]
+            ;[clojure.java.jdbc :as sql]
             [ring.middleware.json :as middleware]
             [api.todo_api :as api]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
-(let [db-host "localhost"
-  db-port 5432
-  db-name "todos_clj"]
+; (let [db-host "localhost"
+;   db-port 5432
+;   db-name "todos_clj"]
 
-(def db {:classname "org.postgresql.Driver" ; must be in classpath
-        :subprotocol "postgresql"
-        :subname (str "//" db-host ":" db-port "/" db-name)
-        ; Any additional keys are passed to the driver
-        ; as driver-specific properties.
-        :user "jasonlane"
-        :password ""}))
+; (def db {:classname "org.postgresql.Driver" ; must be in classpath
+;         :subprotocol "postgresql"
+;         :subname (str "//" db-host ":" db-port "/" db-name)
+;         ; Any additional keys are passed to the driver
+;         ; as driver-specific properties.
+;         :user "jasonlane"
+;         :password ""}))
+
+(def db (or (System/getenv "DATABASE_URL")
+""))
 
 (defn getTodos []
   (api/getTodos))
 
 (defn createTodo [todo]
-    (sql/insert! db :todos [:name] [(get todo "todo")])
-    (getTodos))
+  (api/createTodo todo))
 
 (defn updateTodo [todo]
-  (sql/update! db :todos {:name (get todo "name")} ["id = ?" (get todo "id")])
-  (getTodos))
+    (api/updateTodo todo))
 
 (defn deleteTodo [id]
-  (sql/delete! db :todos ["id = ?" id])
-  (getTodos))
+    (api/deleteTodo id))
 
 (defroutes app-routes
   (GET "/" [] (getTodos))
