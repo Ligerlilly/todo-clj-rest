@@ -14,6 +14,30 @@ To start a web server for the application, run:
 
     lein ring server
 
+## Curls
+
+```js
+curl http://localhost:3000 -X GET -i
+```
+
+```js
+curl http://localhost:3000 -X POST -i -d '{
+    "todo": "first todo"
+}' -H 'Content-type: application/json'
+```
+
+```js
+curl http://localhost:3000 -X PUT -i -d '{
+    "name": "second todo",
+    "id": 1
+}' -H 'Content-type: application/json'
+```
+
+```js
+curl http://localhost:3000 -X DELETE -i -d '{
+    "id": 22
+}' -H 'Content-type: application/json'
+```
 ## License
 
 Copyright © 2017 FIXME

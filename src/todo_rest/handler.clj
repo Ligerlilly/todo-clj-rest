@@ -6,6 +6,7 @@
             [compojure.route :as route]
             [clojure.java.jdbc :as sql]
             [ring.middleware.json :as middleware]
+            [api.todo_api :as api]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 (let [db-host "localhost"
@@ -21,8 +22,7 @@
         :password ""}))
 
 (defn getTodos []
-  (response
-  (into [] (sql/query db ["select * from todos order by id desc"]))))
+  (api/getTodos))
 
 (defn createTodo [todo]
     (sql/insert! db :todos [:name] [(get todo "todo")])
