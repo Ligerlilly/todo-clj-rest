@@ -28,9 +28,19 @@
     (sql/insert! db :todos [:name] [(get todo "todo")])
     (getTodos))
 
+(defn updateTodo [todo]
+  (sql/update! db :todos {:name (get todo "name")} ["id = ?" (get todo "id")])
+  (getTodos))
+
+(defn deleteTodo [id]
+  (sql/delete! db :todos ["id = ?" id])
+  (getTodos))
+
 (defroutes app-routes
   (GET "/" [] (getTodos))
   (POST "/" {body :body} (createTodo body))
+  (PUT "/" {body :body} (updateTodo body))
+  (DELETE "/" {body :body} (deleteTodo (get body "id")))
   (route/not-found "Not Found"))
 
 (def app
