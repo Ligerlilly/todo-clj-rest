@@ -12,8 +12,8 @@ You will need [Leiningen][] 2.0.0 or above installed.
 
 To start a web server for the application, run:
 
-    source .lein-env `containing DATABASE_URL`
-    lein ring server
+source .lein-env `containing DATABASE_URL`
+lein ring server
 
 ## Curls
 
